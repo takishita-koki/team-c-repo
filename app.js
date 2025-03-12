@@ -102,11 +102,16 @@ app.get('/confirmation/:id', (req, res) => {
 
 // 課題1: 機械を料金の安い順に表示
 app.get('/machines/cheap', (req, res) => {
-  // データベースから料金の安い順に機械の情報を取得する処理をここに追加
-
-  // cheap_machines.ejsに遷移するように変更。
-  // ヒント: res.render('ファイル名', { 変数: DBから取得した値 })
-  res.redirect('/');
+  db.all(
+    'SELECT * FROM machines ORDER BY daily_fee ASC',
+    [],
+    (err, machines) => {
+      if (err) {
+        return res.status(500).send('エラーが発生しました');
+      }
+      res.render('cheap_machines', { machines: machines });
+    }
+  );
 });
 
 // 課題2: 機械名で検索する
