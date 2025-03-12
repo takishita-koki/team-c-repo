@@ -12,7 +12,7 @@
     </div>
     <div class="card-actions">
       <!-- いいねボタンを正しく動作させるために action と method を設定する -->
-      <form action="/machines/<%= machine.id %>/like" method="post">
+      <form action="/machines/<%= machine.id %>/like" method="POST">
         <button type="submit" class="like-button">👍 <span>いいね！</span></button>
       </form>
       <a href="/rental/<%= machine.id %>" class="rent-button">レンタルする</a>
