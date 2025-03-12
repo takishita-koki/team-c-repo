@@ -15,9 +15,9 @@
     
     <div class="machines">
     <!-- machines のデータをループして一覧表示する -->
-      <% ______.forEach(function(machine) { %>
+      <% machines.forEach(function(machine) { %>
       <!-- 各機械の情報を表示するために machine-card.ejs を利用する -->
-        <%- include(______ , { machine: machine }) %>
+        <%- include("machine-card.ejs" , { machine: machine }) %>
       <% }); %>
     </div>
   </div>
