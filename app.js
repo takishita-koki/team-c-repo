@@ -127,21 +127,22 @@ app.get('/search', (req, res) => {
 // 課題3: 「いいね」ボタンの処理
 app.post('/machines/:id/like', (req, res) => {
   const machineId = req.params.id;
-  const referer = req.headers.referer || '/';
 
-  if (req.headers.referer) {
-    try {
-      const url = new URL(req.headers.referer);
-      redirectPath = url.pathname;
-    } catch (e) {
-      console.error('URL解析エラー:', e);
+  // likesカラムを+1する
+  db.run(
+    'UPDATE machines SET likes = likes + 1 WHERE id = ?',
+    [machineId],
+    (err) => {
+      if (err) {
+        console.error('いいね更新エラー:', err.message);
+        return res.status(500).send('エラーが発生しました');
+      }
+
+      res.redirect('/');
     }
-  }
-
-  // いいね数を増やす処理をここに追加
-
-  res.redirect(redirectPath);
+  );
 });
+
 
 // 課題4: 人気順（いいねの多い順）に機械を表示(front・backend)
 app.get('/machines/popular', (req, res) => {
