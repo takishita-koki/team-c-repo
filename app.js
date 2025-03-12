@@ -107,6 +107,16 @@ app.get('/machines/cheap', (req, res) => {
   // cheap_machines.ejsに遷移するように変更。
   // ヒント: res.render('ファイル名', { 変数: DBから取得した値 })
   res.redirect('/');
+  db.all(
+    'SELECT * FROM machines ORDER BY daily_fee ASC',
+    [],
+    (err, machines) => {
+      if (err) {
+        return res.status(500).send('エラーが発生しました');
+      }
+      res.render('cheap_machines.ejs', { machines: machines });
+    }
+  );
 });
 
 // 課題2: 機械名で検索する
@@ -118,19 +128,11 @@ app.get('/search', (req, res) => {
   }
 
   // データベースから検索ワードに合致する機械情報を取得する処理をここに追加
-  db.all(
-    'SELECT * FROM machines WHERE name LIKE ?',
-      ['%' + keyword + '%'],
-      (error,machines)=>{
-        if (error) {
-          console.log(error);
-        }
-        res.render('search', {keyword: keyword, machines: machines});
-      }
-    );
-  });
+
   // cheap_machines.ejsに遷移するように変更。
   // ヒント: res.render('ファイル名', { keyword: DBから取得した値, machines: DBから取得した値 })
+  res.redirect('/');
+});
 
 // 課題3: 「いいね」ボタンの処理
 app.post('/machines/:id/like', (req, res) => {
@@ -155,10 +157,14 @@ app.post('/machines/:id/like', (req, res) => {
 // 課題4: 人気順（いいねの多い順）に機械を表示(front・backend)
 app.get('/machines/popular', (req, res) => {
   // データベースからいいねの多い順に機械の情報を取得する処理をここに追加
-
+　db.all('SELECT * FROM machines ORDER BY likes DESC',[],(err,machines) => {
+   if (err) {
+    return res.status(500).send('エラーが発生しました');
+  }
   // 取得したデータをpopular_machines.ejsに渡す
   // ヒント: res.render('ファイル名', {machines: データベースから取得した値})
-  res.redirect('/');
+  res.render('popular_machines',{ machines: machines });
+  });
 });
 
 app.post('/rental/:id', (req, res) => {
